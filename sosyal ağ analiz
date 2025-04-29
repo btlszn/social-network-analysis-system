@@ -10,7 +10,7 @@
 #define RED 0
 #define BLACK 1
 
-// Kullanýcý yapýsý
+// Kullanici yapisi
 typedef struct User {
     int id;
     char name[MAX_NAME_LENGTH];
@@ -20,38 +20,38 @@ typedef struct User {
     int community_id;
 } User;
 
-// Kýrmýzý-Siyah Aðaç Düðümü
+// Kirmizi-Siyah Agac Dügümü
 typedef struct RBNode {
     int user_id;
     int color;
     struct RBNode *left, *right, *parent;
 } RBNode;
 
-// Graf yapýsý
+// Graf yapisi
 typedef struct Graph {
     User users[MAX_USERS];
     int user_count;
     RBNode *rb_root;
 } Graph;
 
-// Ziyaretçi kayýt yapýlarý
+// Ziyaretci kayit yap
 typedef struct {
     bool visited[MAX_USERS];
 } VisitedTracker;
 
-// DFS için yýðýn yapýsý
+// DFS için yigin yapisi
 typedef struct {
     int items[MAX_USERS];
     int top;
 } Stack;
 
-// BFS için kuyruk yapýsý
+// BFS için kuyruk yapisi
 typedef struct {
     int items[MAX_USERS];
     int front, rear;
 } Queue;
 
-// Yýðýn fonksiyonlarý
+// Yigin fonksiyonlari
 void initStack(Stack *s) {
     s->top = -1;
 }
@@ -73,7 +73,7 @@ bool isStackEmpty(Stack *s) {
     return s->top == -1;
 }
 
-// Kuyruk fonksiyonlarý
+// Kuyruk fonksiyonlari
 void initQueue(Queue *q) {
     q->front = q->rear = -1;
 }
@@ -92,7 +92,7 @@ void enqueue(Queue *q, int value) {
 
 int dequeue(Queue *q) {
     if (q->front == -1 || q->front > q->rear) {
-        return -1; // Kuyruk boþ
+        return -1; // Kuyruk bos
     }
     
     int value = q->items[q->front++];
@@ -108,7 +108,7 @@ bool isQueueEmpty(Queue *q) {
     return (q->front == -1 || q->front > q->rear);
 }
 
-// Kýrmýzý-Siyah Aðaç fonksiyonlarý
+// Kirmizi-Siyah Agac fonksiyonlari
 RBNode* createNode(int user_id) {
     RBNode* node = (RBNode*)malloc(sizeof(RBNode));
     node->user_id = user_id;
@@ -243,10 +243,10 @@ void insertRB(Graph *graph, int user_id) {
     fixInsert(graph, node);
 }
 
-// Kýrmýzý-Siyah Aðaç'ta kullanýcý arama
+// Kirmizi-Siyah Agac'ta kullanici arama
 int searchUserRB(RBNode *root, int user_id) {
     if (root == NULL) {
-        return -1; // Kullanýcý bulunamadý
+        return -1; // Kullanici bulunamadý
     }
     
     if (root->user_id == user_id) {
@@ -260,13 +260,13 @@ int searchUserRB(RBNode *root, int user_id) {
     }
 }
 
-// Graf oluþturma ve baþlatma
+// Graf olusturma ve baslatma
 void initGraph(Graph *graph) {
     graph->user_count = 0;
     graph->rb_root = NULL;
 }
 
-// Yeni kullanýcý ekleme
+// Yeni kullanici ekleme
 int addUser(Graph *graph, char *name) {
     if (graph->user_count >= MAX_USERS) {
         return -1; // Maksimum kullanýcý sayýsýna ulaþýldý
@@ -280,13 +280,13 @@ int addUser(Graph *graph, char *name) {
     graph->users[user_id].influence_score = 0.0;
     graph->users[user_id].community_id = -1; // Baþlangýçta topluluk atanmadý
     
-    // Kýrmýzý-Siyah Aðaca ekleme
+    // Kirmizi-Siyah Agaca ekleme
     insertRB(graph, user_id);
     
     return graph->user_count++;
 }
 
-// Kullanýcýlar arasýnda arkadaþlýk baðlantýsý oluþturma (çift yönlü)
+// Kullanicilar arasinda arkadaslik baglantisi olusturma 
 bool createFriendship(Graph *graph, int user_id1, int user_id2) {
     if (user_id1 < 0 || user_id1 >= graph->user_count || 
         user_id2 < 0 || user_id2 >= graph->user_count || 
@@ -294,14 +294,14 @@ bool createFriendship(Graph *graph, int user_id1, int user_id2) {
         return false;
     }
     
-    // Baðlantý zaten var mý kontrol et
+    // Baglanti zaten var mi kontrol et
     for (int i = 0; i < graph->users[user_id1].connection_count; i++) {
         if (graph->users[user_id1].connections[i] == user_id2) {
             return true; // Baðlantý zaten mevcut
         }
     }
     
-    // Baðlantý ekle (her iki yönde)
+    // Baglanti ekle (her iki yönde)
     if (graph->users[user_id1].connection_count < MAX_CONNECTIONS) {
         graph->users[user_id1].connections[graph->users[user_id1].connection_count++] = user_id2;
     }
@@ -313,7 +313,7 @@ bool createFriendship(Graph *graph, int user_id1, int user_id2) {
     return true;
 }
 
-// DFS ile belirli mesafedeki arkadaþlarý bulma
+// DFS ile belirli mesafedeki arkadaþlari bulma
 void findFriendsAtDistance(Graph *graph, int start_user_id, int distance) {
     if (start_user_id < 0 || start_user_id >= graph->user_count) {
         printf("Geçersiz kullanýcý ID'si!\n");
@@ -338,12 +338,12 @@ void findFriendsAtDistance(Graph *graph, int start_user_id, int distance) {
     while (!isQueueEmpty(&q)) {
         int current = dequeue(&q);
         
-        // Eðer istenilen mesafede deðilse devam et
+        // Eger istenilen mesafede degilse devam et
         if (distances[current] > distance) {
             continue;
         }
         
-        // Bu kullanýcýnýn tüm baðlantýlarýný kontrol et
+        // Bu kullanicinin tüm baglantilarini kontrol et
         for (int i = 0; i < graph->users[current].connection_count; i++) {
             int neighbor = graph->users[current].connections[i];
             
@@ -355,8 +355,8 @@ void findFriendsAtDistance(Graph *graph, int start_user_id, int distance) {
         }
     }
     
-    // Tam olarak istenilen mesafedeki arkadaþlarý yazdýr
-    printf("%d mesafe uzaklýktaki arkadaþlar (%s):\n", distance, graph->users[start_user_id].name);
+    // Tam olarak istenilen mesafedeki arkadaslari yazdir
+    printf("%d mesafe uzakliktaki arkadaslar (%s):\n", distance, graph->users[start_user_id].name);
     for (int i = 0; i < graph->user_count; i++) {
         if (distances[i] == distance) {
             printf("- %s (ID: %d)\n", graph->users[i].name, i);
@@ -367,7 +367,7 @@ void findFriendsAtDistance(Graph *graph, int start_user_id, int distance) {
     free(visited);
 }
 
-// Ýki kullanýcý arasýndaki ortak arkadaþlarý bulma
+// iki kullanici arasindaki ortak arkadaslari bulma
 void findCommonFriends(Graph *graph, int user_id1, int user_id2) {
     if (user_id1 < 0 || user_id1 >= graph->user_count ||
         user_id2 < 0 || user_id2 >= graph->user_count) {
@@ -375,13 +375,13 @@ void findCommonFriends(Graph *graph, int user_id1, int user_id2) {
         return;
     }
     
-    printf("Ortak arkadaþlar (%s ve %s):\n", 
+    printf("Ortak arkadaslar (%s ve %s):\n", 
            graph->users[user_id1].name, 
            graph->users[user_id2].name);
     
     int common_count = 0;
     
-    // Her bir arkadaþýn ortak olup olmadýðýný kontrol et
+    // Her bir arkadasin ortak olup olmadigini kontrol et
     for (int i = 0; i < graph->users[user_id1].connection_count; i++) {
         int friend1 = graph->users[user_id1].connections[i];
         
@@ -395,40 +395,40 @@ void findCommonFriends(Graph *graph, int user_id1, int user_id2) {
     }
     
     if (common_count == 0) {
-        printf("Ortak arkadaþ yok.\n");
+        printf("Ortak arkadas yok.\n");
     } else {
-        printf("Toplam %d ortak arkadaþ bulundu.\n", common_count);
+        printf("Toplam %d ortak arkadas bulundu.\n", common_count);
     }
 }
 
-// Etki alaný hesaplama - bir kullanýcýnýn ne kadar etki sahibi olduðunu belirleme
+// Etki alani hesaplama - bir kullanicinin ne kadar etki sahibi olduðunu belirleme
 void calculateInfluence(Graph *graph) {
-    // Her kullanýcý için öncelikle basit bir etki puaný hesapla
-    // Baþlangýçta baðlantý sayýsý ve ikinci derece baðlantýlar kullanýlabilir
+    // Her kullanici için öncelikle basit bir etki puani hesapla
+    // Baslangıçta baglantı sayisi ve ikinci derece baglantilar kullanilabilir
     
     for (int i = 0; i < graph->user_count; i++) {
-        // Doðrudan baðlantýlar için puan
+        // Dogrudan baglantilar için puan
         float score = graph->users[i].connection_count;
         
-        // Ýkinci derece baðlantýlar için daha düþük bir katsayýyla puan ekle
+        // ikinci derece baglantilar için daha düsük bir katsayiyla puan ekle
         int second_degree = 0;
         for (int j = 0; j < graph->users[i].connection_count; j++) {
             int friend_id = graph->users[i].connections[j];
             second_degree += graph->users[friend_id].connection_count;
         }
         
-        score += (float)second_degree * 0.1; // Ýkinci derece baðlantýlara daha düþük aðýrlýk ver
+        score += (float)second_degree * 0.1; 
         
         graph->users[i].influence_score = score;
     }
     
-    // Sýralayarak en etkili kullanýcýlarý bul
+    // Siralayarak en etkili kullanicilari bul
     int *sorted_indices = (int *)malloc(graph->user_count * sizeof(int));
     for (int i = 0; i < graph->user_count; i++) {
         sorted_indices[i] = i;
     }
     
-    // Basit bir kabarcýk sýralama kullan
+    // Basit bir kabarcik siralama kullan
     for (int i = 0; i < graph->user_count - 1; i++) {
         for (int j = 0; j < graph->user_count - i - 1; j++) {
             if (graph->users[sorted_indices[j]].influence_score < 
@@ -440,13 +440,13 @@ void calculateInfluence(Graph *graph) {
         }
     }
     
-    // En etkili kullanýcýlarý yazdýr
-    printf("En etkili kullanýcýlar:\n");
+    // En etkili kullanicilari yazdir
+    printf("En etkili kullanicilar:\n");
     int display_count = graph->user_count > 10 ? 10 : graph->user_count;
     
     for (int i = 0; i < display_count; i++) {
         int idx = sorted_indices[i];
-        printf("%d. %s (ID: %d) - Etki Puaný: %.2f\n", 
+        printf("%d. %s (ID: %d) - Etki Puani: %.2f\n", 
                i + 1, graph->users[idx].name, idx, graph->users[idx].influence_score);
     }
     
@@ -455,15 +455,15 @@ void calculateInfluence(Graph *graph) {
 
 // Topluluk tespiti (basit Union-Find algoritmasý kullanarak)
 void detectCommunities(Graph *graph) {
-    // Union-Find yapýsý için parent dizisi
+    // Union-Find yapisi için parent dizisi
     int *parent = (int *)malloc(graph->user_count * sizeof(int));
     
-    // Baþlangýçta her düðüm kendi topluluðunda
+    // Baslangicta her düðüm kendi toplulugunda
     for (int i = 0; i < graph->user_count; i++) {
         parent[i] = i;
     }
     
-    // Find operasyonu - bir düðümün kök düðümünü (topluluðunu) bul
+    // Find operasyonu - bir düðümün kök düðümünü (toplulugunu) bul
     int find(int x) {
         if (parent[x] != x) {
             parent[x] = find(parent[x]); // Path compression
@@ -471,7 +471,7 @@ void detectCommunities(Graph *graph) {
         return parent[x];
     }
     
-    // Union operasyonu - iki topluluðu birleþtir
+    // Union operasyonu - iki toplulugu birleþtir
     void unite(int x, int y) {
         int rootX = find(x);
         int rootY = find(y);
@@ -481,25 +481,25 @@ void detectCommunities(Graph *graph) {
         }
     }
     
-    // Tüm baðlantýlar için union iþlemi uygula
+    // Tüm baglantilar için union islemi uygula
     for (int i = 0; i < graph->user_count; i++) {
         for (int j = 0; j < graph->users[i].connection_count; j++) {
             unite(i, graph->users[i].connections[j]);
         }
     }
     
-    // Topluluklarý hesapla
+    // Topluluklari hesapla
     for (int i = 0; i < graph->user_count; i++) {
         graph->users[i].community_id = find(i);
     }
     
-    // Topluluklardaki kullanýcý sayýlarýný hesapla
+    // Topluluklardaki kullanici sayilarini hesapla
     int *community_sizes = (int *)calloc(graph->user_count, sizeof(int));
     for (int i = 0; i < graph->user_count; i++) {
         community_sizes[graph->users[i].community_id]++;
     }
     
-    // Topluluklarý yazdýr
+    // Topluluklari yazdir
     printf("Tespit edilen topluluklar:\n");
     
     for (int i = 0; i < graph->user_count; i++) {
@@ -519,7 +519,7 @@ void detectCommunities(Graph *graph) {
     free(community_sizes);
 }
 
-// Kullanýcý bilgilerini yazdýrma
+// Kullanici bilgilerini yazdirma
 void printUserInfo(Graph *graph, int user_id) {
     if (user_id < 0 || user_id >= graph->user_count) {
         printf("Geçersiz kullanýcý ID'si!\n");
@@ -528,14 +528,14 @@ void printUserInfo(Graph *graph, int user_id) {
     
     User *user = &graph->users[user_id];
     
-    printf("Kullanýcý Bilgileri:\n");
+    printf("Kullanici Bilgileri:\n");
     printf("ID: %d\n", user->id);
-    printf("Ýsim: %s\n", user->name);
-    printf("Arkadaþ Sayýsý: %d\n", user->connection_count);
-    printf("Etki Puaný: %.2f\n", user->influence_score);
+    printf("isim: %s\n", user->name);
+    printf("Arkadas Sayisi: %d\n", user->connection_count);
+    printf("Etki Puani: %.2f\n", user->influence_score);
     printf("Topluluk ID: %d\n", user->community_id);
     
-    printf("Arkadaþlar:\n");
+    printf("Arkadaslar:\n");
     for (int i = 0; i < user->connection_count; i++) {
         int friend_id = user->connections[i];
         printf("- %s (ID: %d)\n", graph->users[friend_id].name, friend_id);
@@ -555,7 +555,7 @@ void freeGraph(Graph *graph) {
     freeRBNode(graph->rb_root);
 }
 
-// Kullanýcý giriþi için yardýmcý fonksiyon
+// Kullanici girisi için yardimci fonksiyon
 int getIntInput(const char *prompt, int min, int max) {
     int value;
     char input[50];
@@ -564,30 +564,30 @@ int getIntInput(const char *prompt, int min, int max) {
         printf("%s", prompt);
         fgets(input, sizeof(input), stdin);
         
-        // Giriþi kontrol et
+        // Girisi kontrol et
         if (sscanf(input, "%d", &value) == 1 && value >= min && value <= max) {
             return value;
         }
         
-        printf("Geçersiz giriþ! Lütfen %d ile %d arasýnda bir sayý girin.\n", min, max);
+        printf("Geçersiz giris! Lütfen %d ile %d arasinda bir sayi girin.\n", min, max);
     }
 }
 
-// Kullanýcý ekleme menüsü
+// Kullanici ekleme menüsü
 void addUsersMenu(Graph *graph) {
     printf("\n--- Kullanýcý Ekleme Menüsü ---\n");
     
     while (1) {
         char name[MAX_NAME_LENGTH];
-        printf("\nKullanýcý adý (çýkmak için 'q' girin): ");
+        printf("\nKullanici adi (cikmak için 'a' girin): ");
         fgets(name, sizeof(name), stdin);
         
-        // Çýkýþ kontrolü
+        // cikis kontrolü
         if (name[0] == 'q' && (name[1] == '\n' || name[1] == '\0')) {
             break;
         }
         
-        // Satýr sonu karakterini kaldýr
+        // Satir sonu karakterini kaldir
         name[strcspn(name, "\n")] = '\0';
         
         if (strlen(name) == 0) {
@@ -601,27 +601,27 @@ void addUsersMenu(Graph *graph) {
             break;
         }
         
-        printf("'%s' kullanýcýsý eklendi (ID: %d)\n", name, id);
+        printf("'%s' kullanicisi eklendi (ID: %d)\n", name, id);
     }
 }
 
-// Arkadaþlýk baðlantýsý ekleme menüsü
+// Arkadaslik baglantisi ekleme menüsü
 void addConnectionsMenu(Graph *graph) {
-    printf("\n--- Arkadaþlýk Baðlantýlarý Ekleme Menüsü ---\n");
+    printf("\n--- Arkadaslik Baglantilari Ekleme Menüsü ---\n");
     
     if (graph->user_count < 2) {
-        printf("En az 2 kullanýcý olmalýdýr!\n");
+        printf("En az 2 kullanici olmalidir!\n");
         return;
     }
     
     while (1) {
-        // Kullanýcý listesini göster
-        printf("\nMevcut kullanýcýlar:\n");
+        // Kullanici listesini göster
+        printf("\nMevcut kullanicilar:\n");
         for (int i = 0; i < graph->user_count; i++) {
             printf("%d: %s\n", i, graph->users[i].name);
         }
         
-        int user1 = getIntInput("\n1. kullanýcý ID'si (çýkmak için -1 girin): ", -1, graph->user_count - 1);
+        int user1 = getIntInput("\n1. kullanici ID'si (cıkmak için -1 girin): ", -1, graph->user_count - 1);
         if (user1 == -1) break;
         
         int user2 = getIntInput("2. kullanýcý ID'si: ", 0, graph->user_count - 1);
@@ -644,11 +644,11 @@ void analysisMenu(Graph *graph) {
     printf("\n--- Analiz Menüsü ---\n");
     
     while (1) {
-        printf("\n1. Belirli mesafedeki arkadaþlarý bul\n");
-        printf("2. Ortak arkadaþlarý bul\n");
-        printf("3. Topluluklarý tespit et\n");
-        printf("4. Etki alanýný hesapla\n");
-        printf("5. Kullanýcý bilgilerini göster\n");
+        printf("\n1. Belirli mesafedeki arkadaþlari bul\n");
+        printf("2. Ortak arkadaslari bul\n");
+        printf("3. Topluluklari tespit et\n");
+        printf("4. Etki alanini hesapla\n");
+        printf("5. Kullanici bilgilerini göster\n");
         printf("0. Ana menüye dön\n");
         
         int choice = getIntInput("Seçiminiz: ", 0, 5);
@@ -657,7 +657,7 @@ void analysisMenu(Graph *graph) {
         
         switch (choice) {
             case 1: {
-                int user_id = getIntInput("Kullanýcý ID'si: ", 0, graph->user_count - 1);
+                int user_id = getIntInput("Kullanici ID'si: ", 0, graph->user_count - 1);
                 int distance = getIntInput("Mesafe (1-5): ", 1, 5);
                 findFriendsAtDistance(graph, user_id, distance);
                 break;
@@ -675,7 +675,7 @@ void analysisMenu(Graph *graph) {
                 calculateInfluence(graph);
                 break;
             case 5: {
-                int user_id = getIntInput("Kullanýcý ID'si: ", 0, graph->user_count - 1);
+                int user_id = getIntInput("Kullanici ID'si: ", 0, graph->user_count - 1);
                 printUserInfo(graph, user_id);
                 break;
             }
@@ -687,10 +687,10 @@ void analysisMenu(Graph *graph) {
 void mainMenu(Graph *graph) {
     while (1) {
         printf("\n--- Ana Menü ---\n");
-        printf("1. Kullanýcý ekle\n");
-        printf("2. Arkadaþlýk baðlantýlarý ekle\n");
+        printf("1. Kullanici ekle\n");
+        printf("2. Arkadaslik baglantilari ekle\n");
         printf("3. Analiz yap\n");
-        printf("4. Çýkýþ\n");
+        printf("4. cikis\n");
         
         int choice = getIntInput("Seçiminiz: ", 1, 4);
         
@@ -712,16 +712,16 @@ void mainMenu(Graph *graph) {
 
 // Ana fonksiyon
 int main() {
-    printf("Sosyal Að Analizi ve Ýliþki Aðacý Programý\n");
+    printf("Sosyal Ag Analizi ve iliski Agaci Programi\n");
     printf("=========================================\n\n");
     
     Graph g;
     initGraph(&g);
     
-    // Ana menüyü baþlat
+    // Ana menüyü baslat
     mainMenu(&g);
     
-    // Belleði temizle
+    // Bellegi temizle
     freeGraph(&g);
     
     return 0;
