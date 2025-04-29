@@ -246,7 +246,7 @@ void insertRB(Graph *graph, int user_id) {
 // Kirmizi-Siyah Agac'ta kullanici arama
 int searchUserRB(RBNode *root, int user_id) {
     if (root == NULL) {
-        return -1; // Kullanici bulunamadý
+        return -1; // Kullanici bulunamadi
     }
     
     if (root->user_id == user_id) {
@@ -575,11 +575,11 @@ int getIntInput(const char *prompt, int min, int max) {
 
 // Kullanici ekleme menüsü
 void addUsersMenu(Graph *graph) {
-    printf("\n--- Kullanýcý Ekleme Menüsü ---\n");
+    printf("\n--- Kullanici Ekleme Menüsü ---\n");
     
     while (1) {
         char name[MAX_NAME_LENGTH];
-        printf("\nKullanici adi (cikmak için 'a' girin): ");
+        printf("\nKullanici adi (cikmak için 'q' girin): ");
         fgets(name, sizeof(name), stdin);
         
         // cikis kontrolü
@@ -597,7 +597,7 @@ void addUsersMenu(Graph *graph) {
         
         int id = addUser(graph, name);
         if (id == -1) {
-            printf("Maksimum kullanýcý sayýsýna ulaþýldý!\n");
+            printf("Maksimum kullanici sayisina ulasildi!\n");
             break;
         }
         
@@ -624,17 +624,17 @@ void addConnectionsMenu(Graph *graph) {
         int user1 = getIntInput("\n1. kullanici ID'si (cıkmak için -1 girin): ", -1, graph->user_count - 1);
         if (user1 == -1) break;
         
-        int user2 = getIntInput("2. kullanýcý ID'si: ", 0, graph->user_count - 1);
+        int user2 = getIntInput("2. kullanici ID'si: ", 0, graph->user_count - 1);
         
         if (user1 == user2) {
-            printf("Bir kullanýcý kendisiyle arkadaþ olamaz!\n");
+            printf("Bir kullanici kendisiyle arkadas olamaz!\n");
             continue;
         }
         
         if (createFriendship(graph, user1, user2)) {
-            printf("%s ve %s arkadaþ oldu!\n", graph->users[user1].name, graph->users[user2].name);
+            printf("%s ve %s arkadas oldu!\n", graph->users[user1].name, graph->users[user2].name);
         } else {
-            printf("Baðlantý oluþturulamadý!\n");
+            printf("Baglanti olusturulamadi!\n");
         }
     }
 }
@@ -649,7 +649,7 @@ void analysisMenu(Graph *graph) {
         printf("3. Topluluklari tespit et\n");
         printf("4. Etki alanini hesapla\n");
         printf("5. Kullanici bilgilerini göster\n");
-        printf("0. Ana menüye dön\n");
+        printf("0. Ana menuye dön\n");
         
         int choice = getIntInput("Seçiminiz: ", 0, 5);
         
@@ -686,7 +686,7 @@ void analysisMenu(Graph *graph) {
 // Ana menü
 void mainMenu(Graph *graph) {
     while (1) {
-        printf("\n--- Ana Menü ---\n");
+        printf("\n--- Ana Menu ---\n");
         printf("1. Kullanici ekle\n");
         printf("2. Arkadaslik baglantilari ekle\n");
         printf("3. Analiz yap\n");
